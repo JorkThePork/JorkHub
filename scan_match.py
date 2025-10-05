@@ -17,6 +17,7 @@ from tf_transformations import euler_from_quaternion
 
 class PauseAndCapture(Node):
     def __init__(self):
+        """Full pause and capture logic"""
         super().__init__('pause_and_capture')
 
         self.tf_buffer = tf2_ros.Buffer()
