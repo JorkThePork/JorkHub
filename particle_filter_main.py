@@ -150,9 +150,9 @@ class ParticleFilterNode(Node):
         self.map_sub = self.create_subscription(OccupancyGrid, "/map", self.map_callback, map_qos)
         self.odom_sub = self.create_subscription(Odometry, "/odom", self.odom_callback, odom_qos)
         self.scan_sub = self.create_subscription(LaserScan, "/scan", self.scan_callback, sensor_qos)
-        self.initial_pose_sub = self.create_subscription(PoseWithCovarianceStamped, "/initialpose", self.initialpose_callback, odom_qos)
+        self.initial_pose_sub = self.create_subscription(PoseWithCovarianceStamped, "/initialpose", self.initialpose_callback, 10)
         # Create a PoseArray publisher on the particle_cloud topic
-        self.particle_pub = self.create_publisher(PoseArray, "particle_cloud", sensor_qos) #make sure this is right qos
+        self.particle_pub = self.create_publisher(PoseArray, "/particle_cloud", 10) #make sure this is right qos
         self.create_timer(0.05, self.publish_tf)
         self.create_timer(1.0, self.anchor_manager.check_and_anchor)
         # ------------ TBD - END -------------------
@@ -207,7 +207,7 @@ class ParticleFilterNode(Node):
 
         valid_cells = [(ox + (x + 0.5) * res, oy + (y + 0.5) * res)
                        for y in range(height) for x in range(width)
-                       if map_data[x, height - y - 1] >= 250]   # write the pixel value for "free" grid. refer to lecture notes
+                       if map_data[x, height - y - 1] >= 0.5]   # write the pixel value for "free" grid. refer to lecture notes
         # -------------------- TBD -END ---------------------
 
         for _ in range(self.num_particles):
